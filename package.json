@@ -7,7 +7,9 @@
   "dependencies": {
     "@loadable/component": "^5.12.0",
     "@toruslabs/torus-direct-web-sdk": "^3.5.1",
+    "@truffle/hdwallet-provider": "^1.2.0",
     "dotenv": "^8.2.0",
+    "ethers": "^5.0.20",
     "gatsby": "^2.21.37",
     "gatsby-image": "^2.4.4",
     "gatsby-plugin-manifest": "^2.4.5",
