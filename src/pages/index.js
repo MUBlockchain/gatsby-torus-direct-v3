@@ -1,26 +1,18 @@
 import React, { useContext, useEffect } from 'react'
 import { Link } from 'gatsby'
 import Layout from '../components/layout'
-import Image from '../components/image'
 import SEO from '../components/seo'
-import AuthProvider, { UserContext } from '../components/auth'
-import TorusSdk from "@toruslabs/torus-direct-web-sdk"
+import IndexBody from '../components/IndexBody'
+import UserProvider from '../components/auth'
 
 const IndexPage = () => {
-
-  const { user } = useContext(UserContext)
-
   return (
-    <AuthProvider>
+    <UserProvider>
     <Layout>
       <SEO title='Home' />
-      <h3>Name: {}</h3>
-      <p>Now go build something great.</p>
-      <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-        <Image />
-      </div>
+      <IndexBody />
     </Layout>
-    </AuthProvider>
+    </UserProvider>
   )
 }
 export default IndexPage

@@ -3,12 +3,18 @@ import { UserContext } from './auth'
 
 
 const Login = () => {
-  const { login } = useContext(UserContext)
+  const { user, login, logout } = useContext(UserContext)
 
   return(
-   <button style={{ right: 0, position: 'absolute' }} onClick={login}>
+    <div className="Login">
+
+   {!user ? <button className="button" onClick={login}>
     Log In
-  </button>
+  </button> : 
+  <button className="button" onClick={logout}>
+  Log Out
+</button> }
+  </div>
   )
   }
 
