@@ -9,11 +9,11 @@ const MUBCHeader = () => {
             <div>
             </div>
             <div>
-                <Link to="/">
+                <a href="https://mubc.io/">
                     <img src={require('../images/MUBC Logo Big Letters (vector) copy 2.png')} alt="Logo"/>
                     <br/>
                     <img src={require('../images/MUBC Logo Big Letters (vector) copy.png')} alt="Logo"/>
-                </Link>
+                </a>
             </div>
             <Login />
             <Particles height="125px" params={{
