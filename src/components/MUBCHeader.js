@@ -10,9 +10,9 @@ const MUBCHeader = () => {
             </div>
             <div>
                 <a href="https://mubc.io/">
-                    <img src={require('../images/MUBC Logo Big Letters (vector) copy 2.png')} alt="Logo"/>
+                    <img src={require('../images/MUBCLogoImage.png')} alt="Logo"/>
                     <br/>
-                    <img src={require('../images/MUBC Logo Big Letters (vector) copy.png')} alt="Logo"/>
+                    <img src={require('../images/MUBCLogoText.png')} alt="Logo"/>
                 </a>
             </div>
             <Login />
