@@ -1,35 +1,21 @@
-import React from 'react'
-import DirectWebSdk from '@toruslabs/torus-direct-web-sdk'
+import React, { useContext } from 'react'
+import { UserContext } from './auth'
 
-const torus = new DirectWebSdk({
-  baseUrl: 'http://localhost:8000/serviceworker/',
-  // proxyContractAddress: '0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183', // details for test net
-  // network: 'ropsten', // details for test net,
-  enableLogging: true
-})
 
-async function initTorus () {
-  await torus.init()
-}
+const Login = () => {
+  const { user, login, logout } = useContext(UserContext)
 
-async function login () {
-  console.log('in login')
+  return(
+    <div className="Login">
 
-  await initTorus()
-
-  const userInfo = await torus.triggerLogin({
-    verifier: process.env.GATSBY_VERIFIER_NAME,
-    typeOfLogin: 'google',
-    clientId: process.env.GATSBY_GOOGLE_CLIENT_ID
-  })
-
-  console.log(`userInfo : ${JSON.stringify(userInfo, null, 2)}`)
-}
-
-const Login = () => (
-  <button style={{ right: 0, position: 'absolute' }} onClick={login}>
-    Log in with tor.us
-  </button>
-)
+   {!user ? <button className="button" onClick={login}>
+    Log In
+  </button> : 
+  <button className="button" onClick={logout}>
+  Log Out
+</button> }
+  </div>
+  )
+  }
 
 export default Login
