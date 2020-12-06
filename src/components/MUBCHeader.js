@@ -1,22 +1,43 @@
 import React from 'react'
 import Particles from "react-particles-js"
 import Login from './login'
-import { Link } from 'gatsby'
 
 const MUBCHeader = () => {
     return (
         <div id="mubc-header">
-            <div>
-            </div>
-            <div>
-                <a href="https://mubc.io/">
-                    <img src={require('../images/MUBCLogoImage.png')} alt="Logo"/>
-                    <br/>
-                    <img src={require('../images/MUBCLogoText.png')} alt="Logo"/>
-                </a>
+            <div id="mubc-header__contributors">
+                <div className="mubc-header__contributor-container">
+                    <div className="mubc-header__contributor-background">
+                    </div>
+                    <div className="mubc-header__torus-contributor">
+                        <a href="https://mubc.io/">
+                            <img className="mubc-logo-top" src={require('../images/MUBCLogoImage.png')} alt="Logo" />
+                            <br />
+                            <img className="mubc-logo-bottom" src={require('../images/MUBCLogoText.png')} alt="Logo" />
+                        </a>
+                    </div>
+                </div>
+                <div className="mubc-header__contributor-container">
+                    <div className="mubc-header__contributor-background">
+                    </div>
+                    <div className="mubc-header__torus-contributor">
+                        <a href="https://www.midwestblockchain.org/">
+                            <img className="mubc-header__contributor-image mbc-image" src={'https://static.wixstatic.com/media/351bdf_de5fb3ad922e4221adb1dcf39624278b~mv2.png/v1/crop/x_98,y_28,w_971,h_508/fill/w_278,h_146,al_c,q_85,usm_0.66_1.00_0.01/mbc%20logo%20vector.webp'} alt="MBC" />
+                        </a>
+                    </div>
+                </div>
+                <div className="mubc-header__contributor-container">
+                    <div className="mubc-header__contributor-background">
+                    </div>
+                    <div className="mubc-header__torus-contributor">
+                        <a href="https://tor.us/">
+                            <img className="mubc-header__contributor-image torus-image" src={'https://cdn-images-1.medium.com/max/802/1*uSvRRM76BPyin8Zz5ut4Hw@2x.png'} alt="Torus" />
+                        </a>
+                    </div>
+                </div>
             </div>
             <Login />
-            <Particles height="125px" params={{
+            <Particles className="mubc-header__background" height="125px" params={{
                 particles: {
                     "number": {
                         "value": 40
@@ -25,7 +46,7 @@ const MUBCHeader = () => {
                         "value": 3
                     }
                 }
-            }}/>
+            }} />
         </div>
     )
 }
