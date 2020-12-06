@@ -18,6 +18,7 @@ const IndexBody = () => {
     }
 
     const setValue = async (value) => {
+        console.log(value)
         if (!contract) return
         setTxLoading(true)
         const tx = await contract.set(value)
@@ -28,7 +29,7 @@ const IndexBody = () => {
 
     const handleChange = event => {
         event.preventDefault()
-        setValue(event.target.value)
+        setValue(event.target.number.value)
     }
 
     useEffect(() => {
