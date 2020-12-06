@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from './auth'
+import { AssociateContext } from './associate'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { useContract } from './hooks'
 import '../components/app.css'
@@ -8,6 +9,7 @@ const IndexBody = () => {
     const [val, setVal] = useState()
     const [txLoading, setTxLoading] = useState(false)
     const { user, loading } = useContext(UserContext)
+    const { associateColor } = useContext(AssociateContext)
     const contract = useContract()
 
     const getValue = async () => {
@@ -55,8 +57,8 @@ const IndexBody = () => {
                                 
                                 <form id="val-form" onSubmit={handleChange}>
                                 {!txLoading ? 
-                                <button className="button" form="val-form">Set Value</button> :
-                                <button className="button">Loading...</button> }
+                                <button className="button" form="val-form" style={{backgroundColor: associateColor}}>Set Value</button> :
+                                <button className="button" style={{backgroundColor: associateColor}}>Loading...</button> }
                                 <input type="text" name="number" placeholder="Enter a value..." />
                                 </form>
                             </div>
