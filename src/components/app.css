@@ -14,7 +14,7 @@
     align-content: center;
     justify-content: space-around;
     padding-top: 24px;
-    margin-bottom: 70px;
+    margin-bottom: 15px;
     flex-wrap: wrap;
 }
 
@@ -72,7 +72,6 @@
 
 .mubc-header__background {
     margin-top: -160px;
-    height: 100%;
     z-index: 3 ;
 }
 
