@@ -22,7 +22,7 @@ export default function UserContextProvider({ children }) {
   }, [])
 
   const torus = new DirectWebSdk({
-    baseUrl: 'http://localhost:8000/serviceworker/',
+    baseUrl: 'https://torus.mubc.io/serviceworker/',
     // proxyContractAddress: '0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183', // details for test net
     // network: 'ropsten', // details for test net,
     enableLogging: true
