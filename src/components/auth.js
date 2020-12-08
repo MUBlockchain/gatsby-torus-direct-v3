@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import DirectWebSdk from '@toruslabs/torus-direct-web-sdk'
 import { RelayProvider, resolveConfigurationGSN } from '@opengsn/gsn'
 import { ethers as Ethers } from 'ethers'
+const PaymasterContract = require('../../blockchain/build/contracts/NaivePaymaster.json')
+
 
 const DEFAULT_AUTH_CONTEXT = {
   user: null,
@@ -24,9 +26,7 @@ export default function UserContextProvider({ children }) {
   }, [])
 
   const torus = new DirectWebSdk({
-    baseUrl: 'http://localhost:8000/serviceworker/',
-    // proxyContractAddress: '0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183', // details for test net
-    // network: 'ropsten', // details for test net,
+    baseUrl: `${process.env.GATSBY_BASE_URL}/serviceworker/`,
     enableLogging: true
   })
 
@@ -94,8 +94,7 @@ export default function UserContextProvider({ children }) {
   const makeProviders = async (privateKey) => {
     const provider = Ethers.getDefaultProvider('rinkeby')
     const wallet = new Ethers.Wallet(`0x${privateKey}`, provider)
-    //const paymasterAddress = PaymasterContract.networks[4].address /** accessed in hooks? */
-    let paymasterAddress //@dev
+    const paymasterAddress = PaymasterContract.networks[4].address
     const config = await resolveConfigurationGSN(provider, { paymasterAddress })
     const gsnProvider = new RelayProvider(provider, config)
     const gsnWallet = new Ethers.Wallet(`0x${privateKey}`, gsnProvider)
