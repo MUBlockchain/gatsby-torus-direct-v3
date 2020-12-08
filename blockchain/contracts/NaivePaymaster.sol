@@ -1,6 +1,8 @@
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.6.0 <0.8.0;
+pragma experimental ABIEncoderV2;
 
-import "@opengsn/gsn/contracts/BaseRelayRecipient.sol";
+import "@opengsn/gsn/contracts/BasePaymaster.sol";
 
 contract NaivePaymaster is BasePaymaster {
     address public ourTarget; // The target contract we are willing to pay for

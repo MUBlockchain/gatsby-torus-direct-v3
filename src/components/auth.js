@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import DirectWebSdk from '@toruslabs/torus-direct-web-sdk'
+import { RelayProvider, resolveConfigurationGSN } from '@opengsn/gsn'
 import { ethers as Ethers } from 'ethers'
 
 const DEFAULT_AUTH_CONTEXT = {
@@ -15,6 +16,7 @@ export let UserContext = React.createContext(DEFAULT_AUTH_CONTEXT)
 export default function UserContextProvider({ children }) {
   const [user, setUser] = useState(null)
   const [ethers, setEthers] = useState(null)
+  const [gsnEthers, setGsnEthers] = useState(null)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function UserContextProvider({ children }) {
   }, [])
 
   const torus = new DirectWebSdk({
-    baseUrl: 'https://torus.mubc.io/serviceworker/',
+    baseUrl: 'http://localhost:8000/serviceworker/',
     // proxyContractAddress: '0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183', // details for test net
     // network: 'ropsten', // details for test net,
     enableLogging: true
@@ -60,27 +62,46 @@ export default function UserContextProvider({ children }) {
   }
 
   const login = async () => {
-      try {
-        await initTorus()
-        setLoading(true)
-        const userInfo = await torus.triggerLogin({
-          verifier: process.env.GATSBY_VERIFIER_NAME,
-          typeOfLogin: 'google',
-          clientId: process.env.GATSBY_GOOGLE_CLIENT_ID
-        })
-        const { publicAddress, privateKey, userInfo: info } = userInfo
-        const { name, profileImage } = info
-        setUser({ publicAddress, privateKey, name, profileImage })
-        const provider = Ethers.getDefaultProvider('rinkeby')
-        const wallet = new Ethers.Wallet(`0x${privateKey}`, provider)
-        setEthers(wallet)
-        createSession({ publicAddress, privateKey, name, profileImage })
-      } catch (error) {
-        console.log(error)
-      } finally {
-        setLoading(false)
-      }
+    try {
+      await initTorus()
+      setLoading(true)
+      const userInfo = await torus.triggerLogin({
+        verifier: process.env.GATSBY_VERIFIER_NAME,
+        typeOfLogin: 'google',
+        clientId: process.env.GATSBY_GOOGLE_CLIENT_ID
+      })
+      const { publicAddress, privateKey, userInfo: info } = userInfo
+      const { name, profileImage } = info
+      setUser({ publicAddress, privateKey, name, profileImage })
+      const { wallet, gsnWallet } = await makeProviders(privateKey) //@dev
+      setEthers(wallet)
+      setGsnEthers(gsnWallet)
+      createSession({ publicAddress, privateKey, name, profileImage })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
-  const ctx = { user, loading, login, logout, ethers }
+
+  /**
+   * Create ethers wallets with valid providers for rinkeby and rinkeby gsn
+   * @param {string} privateKey private key signing transactions for the provider
+   * @return {object} wallet plain ethers provider
+   * @return {object} gsnWallet ethers enabled to use Gas Station Network
+   * @dev HOW TO ACCESS PAYMASTER ADDRESS FML
+   */
+  const makeProviders = async (privateKey) => {
+    const provider = Ethers.getDefaultProvider('rinkeby')
+    const wallet = new Ethers.Wallet(`0x${privateKey}`, provider)
+    //const paymasterAddress = PaymasterContract.networks[4].address /** accessed in hooks? */
+    let paymasterAddress //@dev
+    const config = await resolveConfigurationGSN(provider, { paymasterAddress })
+    const gsnProvider = new RelayProvider(provider, config)
+    const gsnWallet = new Ethers.Wallet(`0x${privateKey}`, gsnProvider)
+    return { wallet, gsnWallet }
+  }
+
+  const ctx = { user, loading, login, logout, ethers, gsnEthers }
   return <UserContext.Provider value={ctx}>{children}</UserContext.Provider>
 }
