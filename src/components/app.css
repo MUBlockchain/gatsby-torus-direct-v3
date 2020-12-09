@@ -124,6 +124,11 @@
 
 .chain-values > div > form > input{
     margin-left: 20px;
+    border: none;
+    outline: none;
+    background-color: lightgray;
+    padding: 6px;
+    border-radius: 999px;
 }
 
 /* Layout */
