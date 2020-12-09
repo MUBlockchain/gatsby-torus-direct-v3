@@ -25,11 +25,11 @@ export default function UserContextProvider({ children }) {
 
   // Creates a torus DirectAuth object
   const torus = new DirectWebSdk({
-    baseUrl: `https://${process.env.BASE_URL}/serviceworker/`,
+    baseUrl: `http://${process.env.BASE_URL}/serviceworker/`,
     enableLogging: true
   })
 
-  // Cretate a torus obkect
+  // Cretate a torus object
   const initTorus = async () => {
     await torus.init()
   }
