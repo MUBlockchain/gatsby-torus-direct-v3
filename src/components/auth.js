@@ -3,6 +3,7 @@ import DirectWebSdk from '@toruslabs/torus-direct-web-sdk'
 import { RelayProvider, resolveConfigurationGSN } from '@opengsn/gsn'
 import { ethers as Ethers } from 'ethers'
 const PaymasterContract = require('../../blockchain/build/contracts/NaivePaymaster.json')
+console.log("FLAG ", PaymasterContract)
 
 
 const DEFAULT_AUTH_CONTEXT = {
@@ -10,8 +11,9 @@ const DEFAULT_AUTH_CONTEXT = {
   loading: null,
   login: null,
   logout: null,
-  ethers: null
-}
+  ethers: null,
+  gsnEthers: null
+} 
 
 export let UserContext = React.createContext(DEFAULT_AUTH_CONTEXT)
 

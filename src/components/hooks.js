@@ -10,3 +10,7 @@ export const useContract = () => {
     const instance = new Ethers.Contract(address, SimpleStorageContract.abi, ethers)
     return instance
 }
+
+export const useGSNContract = () => {
+    
+}
