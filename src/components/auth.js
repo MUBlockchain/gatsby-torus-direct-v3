@@ -58,7 +58,7 @@ export default function UserContextProvider({ children }) {
 
     // Set new user from data retrived from local storage
     setUser({ publicAddress, privateKey, name, profileImage })
-    const provider = Ethers.getDefaultProvider('rinkeby')
+    const provider = Ethers.getDefaultProvider(process.env.GATSBY_NETWORK)
 
     // Create a new ethers wallet instance from data retrived from local storage
     const wallet = new Ethers.Wallet(`0x${privateKey}`, provider)
@@ -96,7 +96,7 @@ export default function UserContextProvider({ children }) {
         const { publicAddress, privateKey, userInfo: info } = userInfo
         const { name, profileImage } = info
         setUser({ publicAddress, privateKey, name, profileImage })
-        const provider = Ethers.getDefaultProvider('rinkeby')
+        const provider = Ethers.getDefaultProvider(process.env.GATSBY_NETWORK)
         const wallet = new Ethers.Wallet(`0x${privateKey}`, provider)
         setEthers(wallet)
         createSession({ publicAddress, privateKey, name, profileImage })
