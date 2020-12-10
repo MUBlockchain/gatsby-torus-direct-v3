@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import Particles from "react-particles-js"
 import { AffiliateContext } from './affiliate'
-import Login from './login'
 
 const MUBCHeader = () => {
 
@@ -40,7 +39,6 @@ const MUBCHeader = () => {
                     </div>
                 </div>
             </div>
-            <Login />
             <Particles className="mubc-header__background" height="125px" params={{
                 particles: {
                     "number": {

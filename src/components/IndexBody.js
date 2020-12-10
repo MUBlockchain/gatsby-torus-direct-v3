@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from './auth'
 import { AffiliateContext } from './affiliate'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Login from './login'
 import { useContract } from './hooks'
 import '../components/app.css'
 
@@ -81,6 +82,7 @@ const IndexBody = () => {
                             <p>Value = {val}</p>
                         </div>
                     }</div> : !loading && <h2>Please Log In To Use</h2>}
+                    <Login />
         </div>
     )
 }
