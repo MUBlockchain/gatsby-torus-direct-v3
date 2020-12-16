@@ -97,10 +97,10 @@ export default function UserContextProvider({ children }) {
     const provider = Ethers.getDefaultProvider('rinkeby')
     const wallet = new Ethers.Wallet(`0x${privateKey}`, provider)
     const paymasterAddress = PaymasterContract.networks[4].address
-    const config = await resolveConfigurationGSN(provider, { paymasterAddress })
-    const gsnProvider = new RelayProvider(provider, config)
-    const gsnWallet = new Ethers.Wallet(`0x${privateKey}`, gsnProvider)
-    return { wallet, gsnWallet }
+    // const config = await resolveConfigurationGSN(provider, { paymasterAddress })
+    // const gsnProvider = new RelayProvider(provider, config)
+    // const gsnWallet = new Ethers.Wallet(`0x${privateKey}`, gsnProvider)
+    // return { wallet, gsnWallet }
   }
 
   const ctx = { user, loading, login, logout, ethers, gsnEthers }
