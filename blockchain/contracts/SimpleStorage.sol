@@ -2,7 +2,6 @@
 pragma solidity >=0.6.0 <0.8.0;
 
 import "@opengsn/gsn/contracts/BaseRelayRecipient.sol";
-import "@opengsn/gsn/contracts/interfaces/IKnowForwarderAddress.sol";
 
 contract SimpleStorage is BaseRelayRecipient {
     string public override versionRecipient = "2.0.0";

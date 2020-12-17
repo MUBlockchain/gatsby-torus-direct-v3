@@ -11,6 +11,8 @@ module.exports = async function (deployer, network, accounts) {
   ///
   await paymaster.setRelayHub(process.env.RELAY_RINKEBY)
   await paymaster.setTarget(instance.address)
+  await paymaster.setTrustedForwarder(process.env.FORWARDER_RINKEBY)
   const relayHub = await RelayHubInterface.at(process.env.RELAY_RINKEBY)
-  await relayHub.depositFor(instance.address, { value: 1e17 })
+  await relayHub.depositFor(paymaster.address, { from: accounts[0], value: 1e18 })
 }
+

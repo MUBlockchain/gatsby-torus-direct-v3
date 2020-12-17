@@ -3,7 +3,7 @@ import DirectWebSdk from '@toruslabs/torus-direct-web-sdk'
 import { RelayProvider, resolveConfigurationGSN } from '@opengsn/gsn'
 import { ethers as Ethers } from 'ethers'
 const PaymasterContract = require('../../blockchain/build/contracts/NaivePaymaster.json')
-console.log("FLAG ", PaymasterContract)
+const Web3HttpProvider = require( 'web3-providers-http')
 
 
 const DEFAULT_AUTH_CONTEXT = {
@@ -12,7 +12,8 @@ const DEFAULT_AUTH_CONTEXT = {
   login: null,
   logout: null,
   ethers: null,
-  gsnEthers: null
+  gsnEthers: null,
+  etherProvider: null,
 } 
 
 export let UserContext = React.createContext(DEFAULT_AUTH_CONTEXT)
@@ -22,6 +23,7 @@ export default function UserContextProvider({ children }) {
   const [ethers, setEthers] = useState(null)
   const [gsnEthers, setGsnEthers] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [etherProvider, setEtherProvider] = useState(null)
 
   useEffect(() => {
     if (localStorage.getItem('Public Address') !== null) restoreSession()
@@ -95,14 +97,26 @@ export default function UserContextProvider({ children }) {
    */
   const makeProviders = async (privateKey) => {
     const provider = Ethers.getDefaultProvider('rinkeby')
+    const web3Provider = new Web3HttpProvider(`https://rinkeby.infura.io/v3/${process.env.GATSBY_INFURA}`)
     const wallet = new Ethers.Wallet(`0x${privateKey}`, provider)
-    const paymasterAddress = PaymasterContract.networks[4].address
-    // const config = await resolveConfigurationGSN(provider, { paymasterAddress })
-    // const gsnProvider = new RelayProvider(provider, config)
-    // const gsnWallet = new Ethers.Wallet(`0x${privateKey}`, gsnProvider)
-    // return { wallet, gsnWallet }
+    const paymasterAddress = PaymasterContract.networks['4'].address
+    const config = await resolveConfigurationGSN(web3Provider, { paymasterAddress })
+    // const config = await resolveConfigurationGSN(web3Provider, {
+    //   verbose: true,
+    //   chainId: provider._network.chainId,
+    //   paymasterAddress,
+    // })  
+    const gsnProvider = new RelayProvider(web3Provider, config)
+
+    gsnProvider.addAccount({address: wallet.address, privateKey: Buffer.from(privateKey, 'hex') })
+    
+    // await gsnProvider.init()
+    const etherProvider= new Ethers.providers.Web3Provider(gsnProvider)
+    setEtherProvider(etherProvider)
+    const gsnWallet = new Ethers.Wallet(`0x${privateKey}`, etherProvider)
+    return { wallet, gsnWallet }
   }
 
-  const ctx = { user, loading, login, logout, ethers, gsnEthers }
+  const ctx = { user, loading, login, logout, ethers, gsnEthers, etherProvider }
   return <UserContext.Provider value={ctx}>{children}</UserContext.Provider>
 }
