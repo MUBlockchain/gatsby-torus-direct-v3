@@ -12,8 +12,7 @@ const DEFAULT_AUTH_CONTEXT = {
   login: null,
   logout: null,
   ethers: null,
-  gsnEthers: null,
-  etherProvider: null,
+  gsnProvider: null,
 } 
 
 export let UserContext = React.createContext(DEFAULT_AUTH_CONTEXT)
@@ -21,9 +20,8 @@ export let UserContext = React.createContext(DEFAULT_AUTH_CONTEXT)
 export default function UserContextProvider({ children }) {
   const [user, setUser] = useState(null)
   const [ethers, setEthers] = useState(null)
-  const [gsnEthers, setGsnEthers] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [etherProvider, setEtherProvider] = useState(null)
+  const [gsnProvider, setGSNProvider] = useState(null)
 
   useEffect(() => {
     if (localStorage.getItem('Public Address') !== null) restoreSession()
@@ -46,15 +44,15 @@ export default function UserContextProvider({ children }) {
     localStorage.setItem('Profile Image', profileImage)
   }
 
-  const restoreSession = () => {
+  const restoreSession = async () => {
     const publicAddress = localStorage.getItem('Public Address')
     const privateKey = localStorage.getItem('Private Key')
     const name = localStorage.getItem('Name')
     const profileImage = localStorage.getItem('Profile Image')
     setUser({ publicAddress, privateKey, name, profileImage })
-    const provider = Ethers.getDefaultProvider('rinkeby')
-    const wallet = new Ethers.Wallet(`0x${privateKey}`, provider)
+    const {wallet, etherProvider} = await makeProviders(privateKey)
     setEthers(wallet)
+    setGSNProvider(etherProvider)
   }
 
   const logout = () => {
@@ -77,9 +75,9 @@ export default function UserContextProvider({ children }) {
       const { publicAddress, privateKey, userInfo: info } = userInfo
       const { name, profileImage } = info
       setUser({ publicAddress, privateKey, name, profileImage })
-      const { wallet, gsnWallet } = await makeProviders(privateKey) //@dev
+      const { wallet, etherProvider } = await makeProviders(privateKey) //@dev
       setEthers(wallet)
-      setGsnEthers(gsnWallet)
+      setGSNProvider(etherProvider)
       createSession({ publicAddress, privateKey, name, profileImage })
     } catch (error) {
       console.log(error)
@@ -101,22 +99,15 @@ export default function UserContextProvider({ children }) {
     const wallet = new Ethers.Wallet(`0x${privateKey}`, provider)
     const paymasterAddress = PaymasterContract.networks['4'].address
     const config = await resolveConfigurationGSN(web3Provider, { paymasterAddress })
-    // const config = await resolveConfigurationGSN(web3Provider, {
-    //   verbose: true,
-    //   chainId: provider._network.chainId,
-    //   paymasterAddress,
-    // })  
+
     const gsnProvider = new RelayProvider(web3Provider, config)
 
     gsnProvider.addAccount({address: wallet.address, privateKey: Buffer.from(privateKey, 'hex') })
-    
-    // await gsnProvider.init()
+  
     const etherProvider= new Ethers.providers.Web3Provider(gsnProvider)
-    setEtherProvider(etherProvider)
-    const gsnWallet = new Ethers.Wallet(`0x${privateKey}`, etherProvider)
-    return { wallet, gsnWallet }
+    return { wallet, etherProvider }
   }
 
-  const ctx = { user, loading, login, logout, ethers, gsnEthers, etherProvider }
+  const ctx = { user, loading, login, logout, ethers, gsnProvider }
   return <UserContext.Provider value={ctx}>{children}</UserContext.Provider>
 }

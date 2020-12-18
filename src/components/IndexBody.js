@@ -20,7 +20,6 @@ const IndexBody = () => {
     }
 
     const setValue = async (value) => {
-        console.log(value)
         if (!contract) return
         setTxLoading(true)
         const tx = await contract.set(value)

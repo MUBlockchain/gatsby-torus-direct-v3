@@ -4,14 +4,11 @@ import { ethers as Ethers } from 'ethers'
 const SimpleStorageContract = require('../../blockchain/build/contracts/SimpleStorage.json')
 
 export const useContract = () => {
-    const { user, ethers, gsnEthers, etherProvider} = useContext(UserContext)
-    if (!user || !ethers || !gsnEthers) return null
+    const { user, ethers, gsnProvider} = useContext(UserContext)
+    if (!user || !ethers || !gsnProvider) return null
     const address = SimpleStorageContract.networks['4'].address
     let instance = new Ethers.Contract(address, SimpleStorageContract.abi, ethers)
-    instance = instance.connect(etherProvider.getSigner(user.publicAddress))
+    instance = instance.connect(gsnProvider.getSigner(user.publicAddress))
     return instance
 }
 
-export const useGSNContract = () => {
-    
-}
