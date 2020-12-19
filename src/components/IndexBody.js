@@ -3,6 +3,7 @@ import { UserContext } from './auth'
 import { AssociateContext } from './associate'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { useContract } from './hooks'
+import toast, { Toaster } from 'react-hot-toast'
 import '../components/app.css'
 
 const IndexBody = () => {
@@ -22,10 +23,27 @@ const IndexBody = () => {
     const setValue = async (value) => {
         if (!contract) return
         setTxLoading(true)
-        const tx = await contract.set(value)
-        const receipt = await tx.wait()
-        getValue()
-        setTxLoading(false)
+        try {
+            const tx = await contract.set(value)
+            const { hash } = tx
+            const loadingToast = toast.loading(
+                <div className="toast">Transaction Confirmed!
+            <a target="_blank" rel="noopener noreferrer" href={`https://rinkeby.etherscan.io/tx/${hash}`}>View in Etherscan</a>
+                </div>
+            )
+            const receipt = await tx.wait()
+            toast.remove(loadingToast)
+            toast.success(<div className="toast">Transaction Successful!
+            <a target="_blank" rel="noopener noreferrer" href={`https://rinkeby.etherscan.io/tx/${hash}`}>View Details</a>
+            </div>, {
+                duration: 6000
+            })
+            getValue()
+        } catch (error) {
+            toast.error(<div className="toast">Transaction Failed!</div>)
+        } finally {
+            setTxLoading(false)
+        }
     }
 
     const handleChange = event => {
@@ -53,17 +71,27 @@ const IndexBody = () => {
                     {contract &&
                         <div className="chain-values">
                             <div>
-                                
+
                                 <form id="val-form" onSubmit={handleChange}>
-                                {!txLoading ? 
-                                <button className="button" form="val-form" style={{backgroundColor: associateColor}}>Set Value</button> :
-                                <button className="button" style={{backgroundColor: associateColor}}>Loading...</button> }
-                                <input type="text" name="number" placeholder="Enter a value..." />
+                                    {!txLoading ?
+                                        <button className="button" form="val-form" style={{ backgroundColor: associateColor }}>Set Value</button> :
+                                        <button className="button" style={{ backgroundColor: associateColor }}>Loading...</button>}
+                                    <input type="text" name="number" placeholder="Enter a value..." />
                                 </form>
                             </div>
                             <p>Value = {val}</p>
                         </div>
                     }</div> : !loading && <h2>Please Log In To Use</h2>}
+            <Toaster
+                position="top-right"
+                toastOptions={{
+                    loading: {
+                        iconTheme: {
+                            primary: '#06AA2F',
+                        }
+                    }
+                }}
+            />
         </div>
     )
 }
