@@ -6,7 +6,8 @@ const SimpleStorageContract = require('../../blockchain/build/contracts/SimpleSt
 export const useContract = () => {
     const { user, ethers, gsnProvider} = useContext(UserContext)
     if (!user || !ethers || !gsnProvider) return null
-    const address = SimpleStorageContract.networks['4'].address
+    const chainID = ethers.provider._network.chainId
+    const address = SimpleStorageContract.networks[chainID].address
     let instance = new Ethers.Contract(address, SimpleStorageContract.abi, ethers)
     instance = instance.connect(gsnProvider.getSigner(user.publicAddress))
     return instance
