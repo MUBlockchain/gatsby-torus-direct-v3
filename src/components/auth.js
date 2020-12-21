@@ -94,16 +94,20 @@ export default function UserContextProvider({ children }) {
    * @dev HOW TO ACCESS PAYMASTER ADDRESS FML
    */
   const makeProviders = async (privateKey) => {
-    const provider = Ethers.getDefaultProvider('rinkeby')
-    const web3Provider = new Web3HttpProvider(`https://rinkeby.infura.io/v3/${process.env.GATSBY_INFURA}`)
+    // Must specify what network you are using in your .env file
+    const provider = Ethers.getDefaultProvider(process.env.GATSBY_ETH_PROVIDER)
+    const chainID = provider._network.chainId
+    const web3Provider = new Web3HttpProvider(`https://${process.env.GATSBY_ETH_PROVIDER}.infura.io/v3/${process.env.GATSBY_INFURA}`)
     const wallet = new Ethers.Wallet(`0x${privateKey}`, provider)
-    const paymasterAddress = PaymasterContract.networks['4'].address
+    const paymasterAddress = PaymasterContract.networks[chainID].address
     const config = await resolveConfigurationGSN(web3Provider, { paymasterAddress })
-
     const gsnProvider = new RelayProvider(web3Provider, config)
 
+    // Initialize provider before continuing
+    await gsnProvider.init()
     gsnProvider.addAccount({address: wallet.address, privateKey: Buffer.from(privateKey, 'hex') })
-  
+
+    // Now create a provider that will pay for our contract's transactions
     const etherProvider= new Ethers.providers.Web3Provider(gsnProvider)
     return { wallet, etherProvider }
   }

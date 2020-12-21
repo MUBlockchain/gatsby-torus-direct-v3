@@ -49,6 +49,6 @@ contract NaivePaymaster is BasePaymaster {
         view
         returns (string memory)
     {
-        return "1.0";
+        return "2.0.0";
     }
 }

@@ -24,18 +24,22 @@ const IndexBody = () => {
         if (!contract) return
         setTxLoading(true)
         try {
+            let loadingToast = loadingToast = toast.loading(
+                <span className="toast">Confirming Transaction!</span>
+            )
             const tx = await contract.set(value)
             const { hash } = tx
-            const loadingToast = toast.loading(
-                <div className="toast">Transaction Confirmed!
-            <a target="_blank" rel="noopener noreferrer" href={`https://rinkeby.etherscan.io/tx/${hash}`}>View in Etherscan</a>
-                </div>
+            toast.remove(loadingToast)
+            loadingToast = toast.loading(
+                <span className="toast">Transaction Confirmed!
+            <a target="_blank" rel="noopener noreferrer" href={`https://${process.env.GATSBY_ETH_PROVIDER}.etherscan.io/tx/${hash}`}>View in Etherscan</a>
+                </span>
             )
             const receipt = await tx.wait()
             toast.remove(loadingToast)
-            toast.success(<div className="toast">Transaction Successful!
-            <a target="_blank" rel="noopener noreferrer" href={`https://rinkeby.etherscan.io/tx/${hash}`}>View Details</a>
-            </div>, {
+            toast.success(<span className="toast">Transaction Successful!
+            <a target="_blank" rel="noopener noreferrer" href={`https://${process.env.GATSBY_ETH_PROVIDER}.etherscan.io/tx/${hash}`}>View Details</a>
+            </span>, {
                 duration: 6000
             })
             getValue()
