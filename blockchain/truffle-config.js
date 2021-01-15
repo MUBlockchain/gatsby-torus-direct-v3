@@ -3,6 +3,9 @@ require('dotenv').config()
 module.exports = {
 
   networks: {
+    // networkCheckTimeout: {
+    //   wss: true
+    // }
     development: {
       host: '127.0.0.1',
       port: 8545,
@@ -27,4 +30,15 @@ module.exports = {
       network_id: '42',
     },
   },
+  compilers: {
+    solc: {
+      version: "0.6.10",
+      settings: {
+       optimizer: {
+         enabled: false,
+         runs: 200
+       }
+      }
+    }
+  }
 }
