@@ -104,6 +104,7 @@ const IndexBody = () => {
                             <p>Value = {val}</p>
                         </div>
                     }</div> : !loading && <h2>Please Log In To Use</h2>}
+            <Login />
             <Toaster
                 position="top-right"
                 toastOptions={{

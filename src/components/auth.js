@@ -114,6 +114,7 @@ export default function UserContextProvider({ children }) {
    * @dev HOW TO ACCESS PAYMASTER ADDRESS FML
    */
   const makeProviders = async (privateKey) => {
+    debugger
     // Must specify what network you are using in your .env file
     const provider = Ethers.getDefaultProvider(process.env.GATSBY_NETWORK)
     const chainID = provider._network.chainId
