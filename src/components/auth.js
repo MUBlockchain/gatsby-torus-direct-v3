@@ -24,18 +24,27 @@ export default function UserContextProvider({ children }) {
   const [gsnProvider, setGSNProvider] = useState(null)
 
   useEffect(() => {
+    // Checks to see if items exist in local storage. If so then the session is
+    // restored
     if (localStorage.getItem('Public Address') !== null) restoreSession()
   }, [])
 
+  // Creates a torus DirectAuth object
   const torus = new DirectWebSdk({
     baseUrl: `${process.env.GATSBY_BASE_URL}/serviceworker/`,
     enableLogging: true
   })
 
+  // Cretate a torus object
   const initTorus = async () => {
     await torus.init()
   }
 
+  /**
+   *  Create a logged in session by storing user information inside of local storage.
+   * 
+   * @param {*} info User info object
+   */
   const createSession = info => {
     const { publicAddress, privateKey, name, profileImage } = info
     localStorage.setItem('Public Address', publicAddress)
@@ -44,17 +53,25 @@ export default function UserContextProvider({ children }) {
     localStorage.setItem('Profile Image', profileImage)
   }
 
+  /** 
+   *  Restores a previous logged in state from local storage.
+   */
   const restoreSession = async () => {
     const publicAddress = localStorage.getItem('Public Address')
     const privateKey = localStorage.getItem('Private Key')
     const name = localStorage.getItem('Name')
     const profileImage = localStorage.getItem('Profile Image')
+
+    // Set new user from data retrived from local storage
     setUser({ publicAddress, privateKey, name, profileImage })
     const {wallet, etherProvider} = await makeProviders(privateKey)
     setEthers(wallet)
     setGSNProvider(etherProvider)
   }
 
+  /**
+   *  Terminates the sessions by clearing local storage and setting the use to null
+   */
   const logout = () => {
     localStorage.removeItem('Public Address')
     localStorage.removeItem('Private Key')
@@ -63,6 +80,9 @@ export default function UserContextProvider({ children }) {
     setUser(null)
   }
 
+  /**
+   *  Logs a user in by getting info via TorusDirectAuth
+   */
   const login = async () => {
     try {
       await initTorus()
@@ -102,7 +122,7 @@ export default function UserContextProvider({ children }) {
     const paymasterAddress = PaymasterContract.networks[chainID].address
     const config = {
 	    paymasterAddress
-	   }
+	  }
     const gsnProvider = await RelayProvider.newProvider({ provider: web3Provider, config })
 
     // Initialize provider before continuing

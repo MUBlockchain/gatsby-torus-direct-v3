@@ -3,17 +3,17 @@ import Layout from '../components/layout'
 import SEO from '../components/seo'
 import IndexBody from '../components/IndexBody'
 import UserProvider from '../components/auth'
-import AssociateProvider from '../components/associate'
+import AffiliateProvider from '../components/affiliate'
 
 const IndexPage = () => {
   return (
     <UserProvider>
-      <AssociateProvider>
+      <AffiliateProvider>
     <Layout>
       <SEO title='Home' />
       <IndexBody />
     </Layout>
-    </AssociateProvider>
+    </AffiliateProvider>
     </UserProvider>
   )
 }

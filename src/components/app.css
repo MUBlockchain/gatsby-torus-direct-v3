@@ -76,10 +76,9 @@
 
 /* Login */
 .Login {
-    right: 0;
-    position: absolute;
     margin-top: 40px;
-    margin-right: 20px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .button {
@@ -124,6 +123,11 @@
 
 .chain-values > div > form > input{
     margin-left: 20px;
+    border: none;
+    outline: none;
+    background-color: lightgray;
+    padding: 6px;
+    border-radius: 999px;
 }
 
 /* Transaction Toast */
