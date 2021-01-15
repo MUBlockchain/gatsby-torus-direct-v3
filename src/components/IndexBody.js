@@ -32,13 +32,13 @@ const IndexBody = () => {
             toast.remove(loadingToast)
             loadingToast = toast.loading(
                 <span className="toast">Transaction Confirmed!
-            <a target="_blank" rel="noopener noreferrer" href={`https://${process.env.GATSBY_ETH_PROVIDER}.etherscan.io/tx/${hash}`}>View in Etherscan</a>
+            <a target="_blank" rel="noopener noreferrer" href={`https://${process.env.GATSBY_NETWORK}.etherscan.io/tx/${hash}`}>View in Etherscan</a>
                 </span>
             )
             const receipt = await tx.wait()
             toast.remove(loadingToast)
             toast.success(<span className="toast">Transaction Successful!
-            <a target="_blank" rel="noopener noreferrer" href={`https://${process.env.GATSBY_ETH_PROVIDER}.etherscan.io/tx/${hash}`}>View Details</a>
+            <a target="_blank" rel="noopener noreferrer" href={`https://${process.env.GATSBY_NETWORK}.etherscan.io/tx/${hash}`}>View Details</a>
             </span>, {
                 duration: 6000
             })

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import DirectWebSdk from '@toruslabs/torus-direct-web-sdk'
-import { RelayProvider, resolveConfigurationGSN } from '@opengsn/gsn'
+import { RelayProvider } from '@opengsn/gsn'
 import { ethers as Ethers } from 'ethers'
 const PaymasterContract = require('../../blockchain/build/contracts/NaivePaymaster.json')
 const Web3HttpProvider = require( 'web3-providers-http')
@@ -95,13 +95,15 @@ export default function UserContextProvider({ children }) {
    */
   const makeProviders = async (privateKey) => {
     // Must specify what network you are using in your .env file
-    const provider = Ethers.getDefaultProvider(process.env.GATSBY_ETH_PROVIDER)
+    const provider = Ethers.getDefaultProvider(process.env.GATSBY_NETWORK)
     const chainID = provider._network.chainId
-    const web3Provider = new Web3HttpProvider(`https://${process.env.GATSBY_ETH_PROVIDER}.infura.io/v3/${process.env.GATSBY_INFURA}`)
+    const web3Provider = new Web3HttpProvider(`https://${process.env.GATSBY_NETWORK}.infura.io/v3/${process.env.GATSBY_INFURA}`)
     const wallet = new Ethers.Wallet(`0x${privateKey}`, provider)
     const paymasterAddress = PaymasterContract.networks[chainID].address
-    const config = await resolveConfigurationGSN(web3Provider, { paymasterAddress })
-    const gsnProvider = new RelayProvider(web3Provider, config)
+    const config = {
+	    paymasterAddress
+	   }
+    const gsnProvider = await RelayProvider.newProvider({ provider: web3Provider, config })
 
     // Initialize provider before continuing
     await gsnProvider.init()
