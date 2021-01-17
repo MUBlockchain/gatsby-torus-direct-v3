@@ -4,6 +4,7 @@ import { AffiliateContext } from './affiliate'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Login from './login'
 import { useContract } from './hooks'
+import toast, { Toaster } from 'react-hot-toast'
 import '../components/app.css'
 
 const IndexBody = () => {
@@ -32,10 +33,31 @@ const IndexBody = () => {
         if (!contract) return
         // Creates loading animation to indicate transaction is processing
         setTxLoading(true)
-        const tx = await contract.set(value)
-        const receipt = await tx.wait()
-        getValue()
-        setTxLoading(false)
+        try {
+            let loadingToast = loadingToast = toast.loading(
+                <span className="toast">Confirming Transaction!</span>
+            )
+            const tx = await contract.set(value)
+            const { hash } = tx
+            toast.remove(loadingToast)
+            loadingToast = toast.loading(
+                <span className="toast">Transaction Confirmed!
+            <a target="_blank" rel="noopener noreferrer" href={`https://${process.env.GATSBY_NETWORK}.etherscan.io/tx/${hash}`}>View in Etherscan</a>
+                </span>
+            )
+            const receipt = await tx.wait()
+            toast.remove(loadingToast)
+            toast.success(<span className="toast">Transaction Successful!
+            <a target="_blank" rel="noopener noreferrer" href={`https://${process.env.GATSBY_NETWORK}.etherscan.io/tx/${hash}`}>View Details</a>
+            </span>, {
+                duration: 6000
+            })
+            getValue()
+        } catch (error) {
+            toast.error(<div className="toast">Transaction Failed!</div>)
+        } finally {
+            setTxLoading(false)
+        }
     }
 
     /**
@@ -71,18 +93,28 @@ const IndexBody = () => {
                     {contract &&
                         <div className="chain-values">
                             <div>
-                                
+
                                 <form id="val-form" onSubmit={handleChange}>
-                                {!txLoading ? 
-                                <button className="button" form="val-form" style={{backgroundColor: affiliateColor}}>Set Value</button> :
-                                <button className="button" style={{backgroundColor: affiliateColor}}>Loading...</button> }
-                                <input type="text" name="number" placeholder="Enter a value..." />
+                                    {!txLoading ?
+                                        <button className="button" form="val-form" style={{ backgroundColor: affiliateColor }}>Set Value</button> :
+                                        <button className="button" style={{ backgroundColor: affiliateColor }}>Loading...</button>}
+                                    <input type="text" name="number" placeholder="Enter a value..." />
                                 </form>
                             </div>
                             <p>Value = {val}</p>
                         </div>
                     }</div> : !loading && <h2>Please Log In To Use</h2>}
-                    <Login />
+            <Login />
+            <Toaster
+                position="top-right"
+                toastOptions={{
+                    loading: {
+                        iconTheme: {
+                            primary: '#06AA2F',
+                        }
+                    }
+                }}
+            />
         </div>
     )
 }

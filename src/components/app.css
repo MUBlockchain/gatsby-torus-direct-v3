@@ -130,6 +130,23 @@
     border-radius: 999px;
 }
 
+/* Transaction Toast */
+
+.toast {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+}
+
+.toast > a {
+    color: #157BDB;
+    text-decoration: none;
+    display: block;
+}
+
+.toast > a:hover {
+    opacity: .75;
+}
+
 /* Layout */
 .Layout {
     text-align: center;

@@ -1,19 +1,18 @@
 import { useContext } from "react"
 import { UserContext } from "./auth"
-import {ethers as Ethers } from 'ethers'
-const SimpleStorage = require('../../blockchain/build/contracts/SimpleStorage.json')
+import { ethers as Ethers } from 'ethers'
+const SimpleStorageContract = require('../../blockchain/build/contracts/SimpleStorage.json')
 
 /**
  *  Custom hook that connects to an instance of the simple storage contract
  */
 export const useContract = () => {
-    const { user, ethers } = useContext(UserContext)
-    if(!user || !ethers) return null
-
-    // Determine Ethereum network to connect to
-    const chainId = ethers.provider._network.chainId
-    // Connect to deployed contract, if it exists
-    const address = SimpleStorage.networks[chainId].address
-    // Connect to the contract instance and return so that it is accessible throughout app
-    return new Ethers.Contract(address, SimpleStorage.abi, ethers)
+    const { user, ethers, gsnProvider} = useContext(UserContext)
+    if (!user || !ethers || !gsnProvider) return null
+    const chainID = ethers.provider._network.chainId
+    const address = SimpleStorageContract.networks[chainID].address
+    let instance = new Ethers.Contract(address, SimpleStorageContract.abi, ethers)
+    instance = instance.connect(gsnProvider.getSigner(user.publicAddress))
+    return instance
 }
+
