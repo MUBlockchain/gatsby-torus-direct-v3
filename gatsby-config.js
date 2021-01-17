@@ -4,6 +4,7 @@ module.exports = {
     description: `Gatsby demo of Torus Direct Authentication SDK`,
     author: `@mubc`,
   },
+  pathPrefix: '/gatsby-torus-direct-v3',
   plugins: [
     `gatsby-plugin-react-helmet`,
     {
