@@ -6,6 +6,7 @@ import UserProvider from '../components/auth'
 import AffiliateProvider from '../components/affiliate'
 
 const IndexPage = () => {
+  console.log("process.env", process.env)
   return (
     <UserProvider>
       <AffiliateProvider>
