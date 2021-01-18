@@ -13,3 +13,9 @@ jobs:
       - uses: enriikke/gatsby-gh-pages-action@v2
         with:
           access-token: ${{ secrets.TORUS_DIRECT_GITHUB_KEY }}
+    env:
+      GATSBY_GOOGLE_CLIENT_ID: ${{ secrets.GATSBY_GOOGLE_CLIENT_ID }}
+      GATSBY_VERIFIER_NAME: ${{ secrets.GATSBY_VERIFIER_NAME }}
+      GATSBY_BASE_URL: ${{ secrets.GATSBY_BASE_URL }}
+      GATSBY_ETH_PROVIDER: ${{ secrets.GATSBY_ETH_PROVIDER }}
+      GATSBY_INFURA: ${{ secrets.GATSBY_INFURA }}
